@@ -10,4 +10,5 @@ public interface WorkspaceRepository
         extends JpaRepository<Workspace,Long> {
 
     List<Workspace> findByOwner(User owner);
+    
 }

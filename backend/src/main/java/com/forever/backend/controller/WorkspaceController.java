@@ -48,6 +48,19 @@ public class WorkspaceController {
         );
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<WorkspaceResponse> getWorkspace(
+            @PathVariable Long id,
+            Authentication authentication) {
+
+        return ResponseEntity.ok(
+                workspaceService.getWorkspace(
+                        id,
+                        authentication.getName()
+                )
+        );
+    }
+
     @GetMapping("/{id}/members")
     public ResponseEntity<List<MemberResponse>> getMembers(
             @PathVariable Long id,
@@ -75,4 +88,16 @@ public class WorkspaceController {
                 )
         );
     }
+    @DeleteMapping("/{id}")
+public ResponseEntity<Void> deleteWorkspace(
+        @PathVariable Long id,
+        Authentication authentication) {
+
+    workspaceService.deleteWorkspace(
+            id,
+            authentication.getName()
+    );
+
+    return ResponseEntity.noContent().build();
+}
 }

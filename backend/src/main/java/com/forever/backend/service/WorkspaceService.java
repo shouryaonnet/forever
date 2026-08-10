@@ -10,7 +10,9 @@ import com.forever.backend.entity.WorkspaceMember;
 import com.forever.backend.repository.UserRepository;
 import com.forever.backend.repository.WorkspaceMemberRepository;
 import com.forever.backend.repository.WorkspaceRepository;
+import com.forever.backend.repository.WorkspaceTaskRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,14 +22,17 @@ public class WorkspaceService {
     private final WorkspaceRepository workspaceRepository;
     private final WorkspaceMemberRepository memberRepository;
     private final UserRepository userRepository;
+    private final WorkspaceTaskRepository workspaceTaskRepository;
 
     public WorkspaceService(
             WorkspaceRepository workspaceRepository,
             WorkspaceMemberRepository memberRepository,
+            WorkspaceTaskRepository workspaceTaskRepository,
             UserRepository userRepository) {
 
         this.workspaceRepository=workspaceRepository;
         this.memberRepository=memberRepository;
+        this.workspaceTaskRepository=workspaceTaskRepository;
         this.userRepository=userRepository;
     }
 
@@ -66,12 +71,30 @@ public class WorkspaceService {
                 .orElseThrow(() ->
                         new RuntimeException("User not found"));
 
-        
-        return workspaceRepository
-                .findByOwner(user)
+        return memberRepository
+                .findByUser(user)
                 .stream()
+                .map(WorkspaceMember::getWorkspace)
                 .map(WorkspaceResponse::from)
                 .toList();
+    }
+
+    public WorkspaceResponse getWorkspace(
+            Long workspaceId,
+            String email) {
+
+        User user=userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
+
+        Workspace workspace=workspaceRepository
+                .findById(workspaceId)
+                .orElseThrow(() ->
+                        new RuntimeException("Workspace not found"));
+
+        checkMembership(workspace,user);
+
+        return WorkspaceResponse.from(workspace);
     }
 
     public List<MemberResponse> getMembers(
@@ -161,5 +184,38 @@ public class WorkspaceService {
                     "You are not a member of this workspace"
             );
         }
+    }
+
+    @Transactional
+    public void deleteWorkspace(
+            Long workspaceId,
+            String email) {
+
+        User user=userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
+
+        Workspace workspace=workspaceRepository
+                .findById(workspaceId)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Workspace not found"
+                        ));
+
+        if (!workspace.getOwner().getId()
+                .equals(user.getId())) {
+
+            throw new RuntimeException(
+                    "Only the workspace owner can delete the workspace"
+            );
+        }
+
+        workspaceTaskRepository
+                .deleteByWorkspace(workspace);
+
+        memberRepository
+                .deleteByWorkspace(workspace);
+
+        workspaceRepository.delete(workspace);
     }
 }
