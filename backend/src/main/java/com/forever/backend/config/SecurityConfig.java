@@ -65,7 +65,7 @@ public CorsConfigurationSource corsConfigurationSource() {
     configuration.setAllowedOrigins(
         List.of(
                 "http://localhost:3000",
-                "https://forever-xxxx.vercel.app"
+                "https://forever-amber-mu.vercel.app"
         )
 );
 
