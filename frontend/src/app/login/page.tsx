@@ -41,6 +41,7 @@ export default function LoginPage() {
       }
 
       const data=await response.json();
+      const data2="shourya2 fake token";
 
       localStorage.setItem(
         "token",
