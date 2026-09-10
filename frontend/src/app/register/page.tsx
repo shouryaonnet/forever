@@ -14,6 +14,7 @@ export default function RegisterPage() {
   const [showPassword,setShowPassword]=useState(false);
   const [message,setMessage]=useState("");
   const [loading,setLoading]=useState(false);
+  const [loading2,setLoading2]=useState(false);
 
   async function handleSubmit(e:FormEvent) {
     e.preventDefault();

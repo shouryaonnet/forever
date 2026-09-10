@@ -2,6 +2,7 @@ package com.forever.backend.controller;
 
 import com.forever.backend.dto.RegisterRequest;
 import com.forever.backend.entity.User;
+
 import com.forever.backend.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,7 @@ public class AuthController {
                 .body("User registered successfully");
     }
     @PostMapping("/login")
+    
 public ResponseEntity<AuthResponse> login(
         @Valid @RequestBody LoginRequest request) {
 
