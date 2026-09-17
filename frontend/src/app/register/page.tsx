@@ -6,6 +6,10 @@ import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
   const router=useRouter();
+  const [name1,setN1ame]=useState("");
+  const [username1,setUsername1]=useState("");
+  const [email1,setEmail1]=useState("");
+  const [password1,setPassword1]=useState("");
 
   const [name,setName]=useState("");
   const [username,setUsername]=useState("");
