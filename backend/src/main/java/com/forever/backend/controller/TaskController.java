@@ -20,7 +20,18 @@ public class TaskController {
     public TaskController(TaskService taskService) {
         this.taskService=taskService;
     }
+    @PostMapping 
+    public ResponseEntity<TaskResponse> createTask1(
+            @Valid @RequestBody TaskRequest request,
+            Authentication authentication) {
 
+        return ResponseEntity.ok(
+                taskService.createTask(
+                        request,
+                        authentication.getName()
+                )
+        );
+    }   
     @PostMapping
     public ResponseEntity<TaskResponse> createTask(
             @Valid @RequestBody TaskRequest request,
