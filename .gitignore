@@ -1,1 +1,18 @@
-backend/.env
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Build outputs
+node_modules/
+.next/
+target/
+
+# IDE and OS files
+.DS_Store
+.idea/
+.vscode/
